@@ -40,6 +40,14 @@ class PostsController < ApplicationController
     end
   end
 
+  def destroy_all_posts
+    if Post.delete_all
+      render json: { message: 'All Post deleted successfully' }, status: 200
+    else
+      render json: { errors: 'Posts not deleted' }, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def post_params
