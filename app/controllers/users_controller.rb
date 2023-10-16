@@ -17,6 +17,8 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
+      token = JWT.encode({ user_id: @user.id }, 'your_secret_key', 'HS256')
+      response.headers['Authorization'] = "Bearer #{token}"
       render json: @user, status: :created
     else
       render json: { errors: @user.errors.full_messages },
@@ -26,10 +28,10 @@ class UsersController < ApplicationController
 
   # PUT /users/{username}
   def update
-    unless @user.update(user_params)
-      render json: { errors: @user.errors.full_messages },
-             status: :unprocessable_entity
-    end
+    return if @user.update(user_params)
+
+    render json: { errors: @user.errors.full_messages },
+           status: :unprocessable_entity
   end
 
   # DELETE /users/{username}
@@ -41,8 +43,8 @@ class UsersController < ApplicationController
 
   def find_user
     @user = User.find_by_username!(params[:_username])
-    rescue ActiveRecord::RecordNotFound
-      render json: { errors: 'User not found' }, status: :not_found
+  rescue ActiveRecord::RecordNotFound
+    render json: { errors: 'User not found' }, status: :not_found
   end
 
   def user_params
