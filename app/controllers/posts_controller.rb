@@ -1,5 +1,6 @@
 class PostsController < ApplicationController
   before_action :find_post, except: %i[index create]
+  before_action :authorize_request
 
   def index
     posts = Post.all
