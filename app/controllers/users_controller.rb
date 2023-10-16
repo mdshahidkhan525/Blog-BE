@@ -18,8 +18,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       token = JWT.encode({ user_id: @user.id }, 'your_secret_key', 'HS256')
-      response.headers['Authorization'] = "Bearer #{token}"
-      render json: @user, status: :created
+      render json: { user: @user, token: token}, status: :created
     else
       render json: { errors: @user.errors.full_messages },
              status: :unprocessable_entity
