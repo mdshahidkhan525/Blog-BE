@@ -4,7 +4,6 @@ default: &default
   timeout: 5000
   username: <%= ENV.fetch("DB_USERNAME") %>
   password: <%= ENV.fetch("DB_PASSWORD") %>
-  host: <%= ENV.fetch("DB_HOST")%>
 
 development:
   <<: *default
